@@ -1,7 +1,11 @@
 # - user:
 #   system user to act upon
+# - git_user_name
+#   git config user.name
+# - git_user_email
+#   git config user.email
 class tbfisher (
-  $user = 'vagrant',
+  $user,
   $git_user_name,
   $git_user_email,
 ) {
@@ -29,43 +33,44 @@ class tbfisher (
   }
 
   # Git
-  file { "${home}/.gitconfig":
+  $git_config = "${home}/.gitconfig"
+  file { $git_config:
     ensure => 'file',
     owner => $user,
     group => $user,
   }
   ini_setting { 'git user name':
     ensure => present,
-    path => "${home}/.gitconfig",
+    path => $git_config,
     section => 'user',
     setting => 'name',
     value => $git_user_name,
-    require => File["${home}/.gitconfig"],
+    require => File[$git_config],
   }
   ini_setting { 'git user email':
     ensure => present,
-    path => "${home}/.gitconfig",
+    path => $git_config,
     section => 'user',
     setting => 'email',
     value => $git_user_email,
-    require => File["${home}/.gitconfig"],
+    require => File[$git_config],
   }
   ini_setting { 'git push default':
     ensure => present,
-    path => "${home}/.gitconfig",
+    path => $git_config,
     section => 'push',
     setting => 'default',
     value => 'simple',
-    require => File["${home}/.gitconfig"],
+    require => File[$git_config],
   }
   # git lg -- pretty printed git log
   # https://coderwall.com/p/euwpig
   ini_setting { 'git lg':
     ensure => present,
-    path => "${home}/.gitconfig",
+    path => $git_config,
     section => 'alias',
     setting => 'lg',
     value => 'log --color --graph --pretty=format:\'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\' --abbrev-commit',
-    require => File["${home}/.gitconfig"],
+    require => File[$git_config],
   }
 }
