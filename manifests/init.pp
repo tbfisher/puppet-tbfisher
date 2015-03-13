@@ -74,3 +74,30 @@ class tbfisher (
     require => File[$git_config],
   }
 }
+
+class tbfisher::nfs (
+) {
+
+  include tbfisher
+
+  package { [
+      'nfs-kernel-server',
+      'nfs-common',
+      'rpcbind',
+    ] :
+    ensure => 'installed'
+  }
+
+  service { "nfs-kernel-server":
+    enable => true,
+    ensure => running,
+    require => Package['nfs-kernel-server'],
+  }
+
+  file { '/etc/exports':
+    require => Package['nfs-kernel-server'],
+    notify => Service['nfs-kernel-server'],
+    content => "/var/www *(rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=1000)
+${tbfisher::home} *(rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=1000)",
+  }
+}
