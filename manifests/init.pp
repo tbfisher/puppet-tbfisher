@@ -18,6 +18,15 @@ class tbfisher (
     package { 'pv': }
   }
 
+  # jq
+  wget::fetch { 'http://stedolan.github.io/jq/download/linux64/jq':
+    destination => '/usr/local/bin/jq',
+  } ~>
+  file { '/usr/local/bin/jq':
+    ensure => file,
+    mode   => '0755',
+  }
+
   # Shell
   file { "${home}/.bash_profile":
     ensure => 'file',
