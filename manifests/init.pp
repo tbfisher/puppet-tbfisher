@@ -72,18 +72,6 @@ class tbfisher (
     value   => 'simple',
     require => File[$git_config],
   }
-  # git lg -- pretty printed git log
-  # https://coderwall.com/p/euwpig
-  ini_setting { 'git lg':
-    ensure  => present,
-    path    => $git_config,
-    section => 'alias',
-    setting => 'lg',
-    value   => 'log --color --graph --pretty=format:\'%Cred%h%Creset \
--%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\' \
---abbrev-commit',
-    require => File[$git_config],
-  }
 }
 
 # nfs
